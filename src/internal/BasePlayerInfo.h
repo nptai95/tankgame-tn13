@@ -16,9 +16,9 @@ public:
   std::list<ITank*> getDeadTanks() const;
   std::pair<int, int> getHeadquarterPosition() const;
 
-  CommandInfo getLastMove() const {
-    return _lastMove;
-  }
+  // Command getLastMove() const {
+  //   return _lastMove;
+  // }
 
   bool isPlayable() const;
 
@@ -32,9 +32,9 @@ public:
   bool getHit(BaseTank* tank);
   bool getHit(const std::pair<int,int>& pos, BaseTank*& tank);
 
-  void updateLastMove(const CommandInfo& cmd) {
-    _lastMove = cmd;
-  }
+  // void updateLastMove(const Command& cmd) {
+  //   _lastMove = cmd;
+  // }
 
   void addTank(int hp, int ammo, int range, std::pair<int,int> pos);
 
@@ -44,7 +44,7 @@ public:
 
 private:
   char _mapID;
-  CommandInfo _lastMove;
+  Command _lastMove;
   std::list<ITank*> _aliveTanks;
   std::list<ITank*> _deadTanks;
   std::pair<int, int> _headquarterPosition;

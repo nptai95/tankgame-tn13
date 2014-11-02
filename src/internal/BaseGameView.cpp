@@ -89,8 +89,7 @@ BaseGameView::BaseGameView(TileManager* tileManager, const BaseGameModel* model)
   : _tileManager(tileManager), _model(model),
     _displayOffset(32, 32),
     _backgroundInfoWidth(300),
-    _infoOffsetY(90),
-    _lineSpacing(24) {
+    _infoOffsetY(70) {
     this->prepareCharToStringTileMap();
 
 
@@ -145,18 +144,12 @@ void BaseGameView::initDisplay() {
   }
 
   sprintf(__drawString, 
-    "Press R/r to switch between\nauto-run mode and manual mode.");
+    "Press R/r to toggle between\nauto-run mode and manual mode.");
   _displayImg->draw_text(_infoOffsetX + 8, 8, __drawString, 
                           __cYellow, __cBlack, 1.0, __smallFont);
 
   sprintf(__drawString, "In manual mode, press SPACE to step.");
   _displayImg->draw_text(_infoOffsetX + 8, 8 + 32, __drawString, 
-                          __cYellow, __cBlack, 1.0, __smallFont);
-
-  sprintf(__drawString, "Maximum turn: %5d",
-          _model->getBaseMap()->getMapInfo().maxStep);
-
-  _displayImg->draw_text(_infoOffsetX + 8, 8 + 64, __drawString, 
                           __cYellow, __cBlack, 1.0, __smallFont);
 
   updateInfo();
@@ -174,6 +167,7 @@ void BaseGameView::updateInfo() {
   
   int tileSize = _tileManager->getTileSize();
   int mapHeight = _model->getMap()->getHeight() * tileSize;
+  int lineSpacing = 24;
   
   int currentY = _infoOffsetY;
   int currentX = _infoOffsetX + 8;
@@ -186,7 +180,7 @@ void BaseGameView::updateInfo() {
   sprintf(__drawString, "Current turn: %5d", _model->getCurrentTurnCount());
   _displayImg->draw_text(currentX, currentY, __drawString,
                           __cTurquoise1, __cBlack, 1.0, __smallFont);
-  currentY += _lineSpacing;
+  currentY += lineSpacing;
 
   vector<IPlayerInfo*> playerInfos = _model->getPlayersInfo();
   IPlayerInfo* cur;
@@ -199,12 +193,12 @@ void BaseGameView::updateInfo() {
 
     _displayImg->draw_text(currentX, currentY, __drawString, 
                             __cGreen, __cBlack, 1.0, __bigFont);
-    currentY += _lineSpacing;
+    currentY += lineSpacing;
 
     sprintf(__drawString, "Pos\t\tHP\tAmmo\tRange");
     _displayImg->draw_text(currentX, currentY, __drawString, 
                           __cPink, __cBlack, 1.0, __smallFont);
-    currentY += _lineSpacing;
+    currentY += lineSpacing;
 
     list<ITank*> tanks = cur->getAliveTanks();
     for (list<ITank*>::iterator it = tanks.begin(); it != tanks.end(); ++it) {
@@ -219,7 +213,7 @@ void BaseGameView::updateInfo() {
 
       _displayImg->draw_text(currentX, currentY, __drawString, 
                               __cWhite, __cBlack, 1.0, __smallFont);
-      currentY += _lineSpacing;
+      currentY += lineSpacing;
 
     }
   }

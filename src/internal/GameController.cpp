@@ -45,38 +45,31 @@ bool GameController::nextTurn() {
 
   IPlayer* currentPlayer = _players[_currentPlayerTurn++];
 
-  CommandInfo move;
-  move.commander = currentPlayer->getPlayerInfo();
-  move.originalCommand = currentPlayer->nextMove();
-  move.executedCommand = move.originalCommand;
+  Command nextMove = currentPlayer->nextMove();
+
+  string nextMoveMessage = currentPlayer->getPlayerInfo()->getPlayerMapID() 
+          + string(": ") + nextMove.toString();
 
   _model->nextTurnCount();
 
-  string nextMoveMessage = move.commander->getPlayerMapID() 
-          + string(": ") + move.originalCommand.toString();
   std::cout << "-- Turn " << _model->getCurrentTurnCount() << " ---" << endl;
+  
+  if (_model->isValidMove(currentPlayer->getPlayerInfo(), nextMove)) {
 
-  if (_model->isValidMove(move.commander, move.originalCommand)) {
-
-    animateMove(move.originalCommand);
+    animateMove(nextMove);
 
     vector<pair<int,int> > changes 
-      = _model->applyMove(move.commander, move.originalCommand);
+      = _model->applyMove(currentPlayer->getPlayerInfo(), nextMove);
       
     _view->update(changes);
     _view->updateInfo();
 
     _ending = _model->isEndGame();
 
-    ((BasePlayerInfo*)move.commander)->updateLastMove(move);
-
     cout << nextMoveMessage << std::endl;
 
     return true;
   } else {
-
-    move.executedCommand = Command();
-    ((BasePlayerInfo*)move.commander)->updateLastMove(move);
 
     cout << nextMoveMessage << " INVALID!!! - SKIP" << std::endl;
 
